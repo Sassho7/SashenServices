@@ -2,7 +2,7 @@
 
 namespace SmartGarage.Controllers
 {
-    public class UserControler : Controller
+    public class ServiceController : Controller
     {
         public IActionResult Index()
         {

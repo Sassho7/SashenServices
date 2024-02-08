@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\DTOs\" />
+    <Folder Include="Models\DTOs\VehicleDTO\" />
+    <Folder Include="Models\Enums\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Data\" />
+    <Folder Include="Services\" />
+    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
