@@ -4,20 +4,17 @@ namespace SmartGarage.Models.DTOs.VehicleDTO;
 
 public class VehicleCreateDTO
 {
-    [MinLength(2), MaxLength(20)]
-    public string? CarMake { get; set; } // marka
+    public string? CarMake { get; set; }
 
-    [MinLength(2), MaxLength(20)]
-    public string? CarModel { get; set; } // model
+    public string? CarModel { get; set; }
 
-    [MinLength(4), MaxLength(4)]
-    public int? CarYear { get; set; } // godina
+    public int? CarYear { get; set; }
 
-    [MinLength(16), MaxLength(19)]
-    public string? CarVin { get; set; } // vin nomer
+    public string? CarVin { get; set; }
 
-    [MinLength(7), MaxLength(8)]
-    public string? CarLicencePlate { get; set; } // registracionen nomer
+    public string? CarLicencePlate { get; set; }
+
+    public int CarSystemId {  get; set; }
 
     public User user { get; set; }
 
