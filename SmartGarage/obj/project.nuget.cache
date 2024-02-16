@@ -1,8 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "o9brhqvPcUpBMbuXsyuNa0aI8WQwrIH5TYt42SR1dynf9HwsPVqw/kku6zIk8oNa2g+BGVnebhMmAQlEZGAcXw==",
+  "dgSpecHash": "1B2NTUU6rJXlrMOE0k763k01cjpuKWtP+rF1IGV59u/35DTyoDih+mKWsrvBN7WboE0U2HW2rDjjXpTAmSnt0w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\pc\\source\\repos\\SashenServices\\SmartGarage\\SmartGarage.csproj",
+  "projectFilePath": "C:\\Users\\yasen\\source\\repos\\Sassho7\\SashenServices\\SmartGarage\\SmartGarage.csproj",
   "expectedPackageFiles": [],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file C:\\Users\\yasen\\source\\repos\\Sassho7\\SashenServices\\SmartGarage\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }
