@@ -1,3 +1,7 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SmartGarage.Data;
+
 namespace SmartGarage
 {
     public class Program
@@ -6,7 +10,12 @@ namespace SmartGarage
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Services.AddDbContext<SGDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddDefaultTokenProviders();
+
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
@@ -24,6 +33,7 @@ namespace SmartGarage
 
             app.UseRouting();
 
+            app.UseAuthentication(); // Add this line for Identity
             app.UseAuthorization();
 
             app.MapControllerRoute(
