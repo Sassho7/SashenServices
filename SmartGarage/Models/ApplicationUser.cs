@@ -11,5 +11,7 @@ namespace SmartGarage.Models
         public DateTime DateOfBirth { get; set; }
         public string ProfilePicture { get; set; }
         public DateTime RegistrationDate { get; set; }
+        public string VerificationToken { get; set; }
+        public bool IsEmailVerified { get; set; }
     }
 }
