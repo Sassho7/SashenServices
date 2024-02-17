@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartGarage.Models.DTOs.VehicleDTO;
 
-public class VehicleUpdateTO
+public class VehicleUpdateDTO
 {
     public string? CarMake { get; set; }
 
@@ -15,5 +15,4 @@ public class VehicleUpdateTO
     public string? CarLicencePlate { get; set; }
 
     public User user { get; set; }
-
 }

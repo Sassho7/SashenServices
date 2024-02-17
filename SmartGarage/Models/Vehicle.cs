@@ -39,4 +39,7 @@ public class Vehicle
 
     [ForeignKey("User")]
     public int Id { get; set; }
+
+    public string MechanicToVehicle { get; set; }
+
 }

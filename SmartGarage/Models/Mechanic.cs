@@ -36,5 +36,7 @@ public class Mechanic
 
     public UserStatus Status {  get; set; }
 
+    //public Vehicle VehicleId { get; set; }
+
 
 }
