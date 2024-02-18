@@ -15,6 +15,16 @@ public class Vehicle
         Id = id;
     }
 
+    public Vehicle(string? carMake, string? carModel, string? carVin, int? carYear, string? carLicencePlate, int carSystemId)
+    {
+        CarMake = carMake;
+        CarModel = carModel;
+        CarVin = carVin;
+        CarYear1 = carYear;
+        CarLicencePlate = carLicencePlate;
+        CarSystemId = carSystemId;
+    }
+
     [Required]
     [MinLength(2), MaxLength(20)]
     public string CarMake { get; set; } // marka
@@ -41,5 +51,5 @@ public class Vehicle
     public int Id { get; set; }
 
     public string MechanicToVehicle { get; set; }
-
+    public int? CarYear1 { get; }
 }

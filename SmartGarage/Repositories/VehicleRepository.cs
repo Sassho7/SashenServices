@@ -48,7 +48,7 @@ public class VehicleRepository : IVehicleRepository
     {
         var vehicle = GetVehicles().FirstOrDefault(v => v.Id == id);
 
-        return vehicle == null ? null : vehicle; // ili samo vehicle da vryshta?
+        return vehicle; 
     }
 
     public bool MechanicToVehicle(Mechanic mechanic, Vehicle vehicle)

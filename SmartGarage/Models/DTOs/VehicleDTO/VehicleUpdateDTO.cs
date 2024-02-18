@@ -15,4 +15,5 @@ public class VehicleUpdateDTO
     public string? CarLicencePlate { get; set; }
 
     public User user { get; set; }
+    public int CarSystemId { get; internal set; }
 }

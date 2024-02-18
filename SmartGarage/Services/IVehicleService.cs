@@ -9,7 +9,6 @@ public interface IVehicleService
     public List<Vehicle> GetAllVehicles();
     public Vehicle GetVehicleById(int id);
     public Vehicle CreateVehicle(VehicleCreateDTO dto);
-    public Vehicle UpdateVehicle(VehicleUpdateDTO dto);
-    public void DeleteVehicle(int id);
-    
+    public Vehicle UpdateVehicle(int id, VehicleUpdateDTO dto);
+    public string DeleteVehicle(int id);
 }
