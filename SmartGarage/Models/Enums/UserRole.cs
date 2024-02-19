@@ -1,4 +1,4 @@
-﻿namespace SmartGarage.Models.Enums;
+namespace SmartGarage.Models.Enums;
 
 public enum UserRole
 {

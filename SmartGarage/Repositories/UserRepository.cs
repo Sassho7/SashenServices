@@ -1,4 +1,4 @@
-﻿       using Microsoft.EntityFrameworkCore;
+       using Microsoft.EntityFrameworkCore;
 using SmartGarage.Data;
 using SmartGarage.Models;
 using System.Collections.Generic;

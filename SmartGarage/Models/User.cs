@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using SmartGarage.Models.Enums;
+
+namespace SmartGarage.Models;
 
 public class User
 {
