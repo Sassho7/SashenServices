@@ -1,27 +1,40 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SmartGarage.Models;
+using SmartGarage.Services;
+using System;
 
-[ApiController]
-[Route("api/users")]
-public class UserController : ControllerBase
+namespace SmartGarage.Controllers
 {
-    private readonly IUserService _userService;
-
-    public UserController(IUserService userService)
+    [ApiController]
+    [Route("api/users")]
+    public class UserController : ControllerBase
     {
-        _userService = userService;
-    }
+        private readonly IUserService _userService;
 
-    [HttpPost("register")]
-    public IActionResult Register([FromBody] UserRegistrationRequest request)
-    {
-        try
+        public UserController(IUserService userService)
         {
-            var newUser = _userService.RegisterUser(request);
-            return Ok(new { Message = "Registration successful", UserId = newUser.Id });
+            _userService = userService;
         }
-        catch (Exception ex)
+
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] UserRegistrationRequest request)
         {
-            return BadRequest(new { Message = "Registration failed", Error = ex.Message });
+            try
+            {
+                var registrationSuccess = _userService.RegisterAsync(request.Email, request.Password, request.PhoneNumber).Result;
+                if (registrationSuccess)
+                {
+                    return Ok(new { Message = "Registration successful" });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Registration failed" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = "Registration failed", Error = ex.Message });
+            }
         }
     }
 }
