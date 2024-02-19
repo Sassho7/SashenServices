@@ -2,7 +2,42 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+  
+</head>
+
+<body>
+
+    <header>
+        <h1>Welcome to Sashen Services</h1>
+    </header>
+
+    <main>
+        <section id="login-section">
+            <h2>Login</h2>
+            <form action="login.php" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Login</button>
+            </form>
+            <p><a href="forgot_password.php">Forgot your password?</a></p>
+        </section>
+    </main>
+
+    <footer>
+       
+    </footer>
+
+</body>
+
+</html>

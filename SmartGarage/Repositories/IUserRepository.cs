@@ -1,15 +1,15 @@
-using SmartGarage.Models;
-using SmartGarage.Models.DTOs;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace SmartGarage.Repositories;
-
-public interface IUserRepository
+namespace SmartGarage.Repositories
 {
-    public List<User> GetUsers(string firstName, int phone);
-    public List<User> GetByPhone(int phone);
-    //public User GetByPhoneNumber(int phone);
-    public User GetByExactName(string firstName);
-    public List <User> GetByEmail(string email);
-    // metod za registrirane na user
-    // metod za redaktirane na user
+    public interface IUserRepository
+    {
+        Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<User> GetUserByIdAsync(int userId);
+        Task<User> GetUserByUsernameAsync(string username);
+        Task<User> AddUserAsync(User user);
+        Task<User> UpdateUserAsync(User user);
+        Task<bool> DeleteUserAsync(int userId);
+    }
 }

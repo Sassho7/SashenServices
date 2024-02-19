@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using SmartGarage.Models.Enums;
 
@@ -5,49 +6,29 @@ namespace SmartGarage.Models;
 
 public class User
 {
-    public User() { }
-    public User(string firstName, string lastName, int id, int phoneNumber)
-    {
-        FirstName = firstName;
-        LastName = lastName;
-        Id = id;
-        PhoneNumber = phoneNumber;
-
-    }
-    [Required]
-    [MinLength(2), MaxLength(20)]
-    public string FirstName { get; set; } // first name
-    
-    [Required]
-    [MinLength(2), MaxLength(20)]
-    public string LastName { get; set; } // last name
-
     public int Id { get; set; }
 
-    [Required]
-    [MinLength(2), MaxLength(20)]
-    public string UserName { get; set; } // user name
+    [Required(ErrorMessage = "Username is required.")]
+    [StringLength(20, MinimumLength = 2, ErrorMessage = "Username must be between 2 and 20 characters.")]
+    public string Username { get; set; }
 
-    [Required]
-    [MinLength(6), MaxLength(20)]
-    public string Password { get; set; } // password
+    [Required(ErrorMessage = "Password is required.")]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$", ErrorMessage = "Password must meet the criteria.")]
+    public string PasswordHash { get; set; }
 
-    [EmailAddress, MaxLength(100)]
-    public string EmailAddress { get; set; } // email address
+    [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Invalid email address.")]
+    public string Email { get; set; }
 
-    [Required]
-    [MinLength(10), MaxLength(13)]
-    public int PhoneNumber { get; set; } // phone number
+    [Required(ErrorMessage = "Phone number is required.")]
+    [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be 10 digits.")]
+    public string PhoneNumber { get; set; }
 
-    public UserRole Role { get; set; }
-
-    public UserStatus Status { get; set; }
-
-    public List<Vehicle> Vehicles { get; set; }
-
-    public List<Mechanic> Mechanics { get; set; }
-
-    //list ot takskove
-    //list ot nqkakwo ime za svurshena rabota
-
+    public User(string username, string passwordHash, string email, string phoneNumber)
+    {
+        Username = username;
+        PasswordHash = passwordHash;
+        Email = email;
+        PhoneNumber = phoneNumber;
+    }
 }
