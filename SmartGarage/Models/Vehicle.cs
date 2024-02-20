@@ -20,10 +20,12 @@ public class Vehicle
         CarMake = carMake;
         CarModel = carModel;
         CarVin = carVin;
-        CarYear1 = carYear;
         CarLicencePlate = carLicencePlate;
-        CarSystemId = carSystemId;
+        Id = carSystemId;
     }
+
+    [Key]
+    public int Id { get; set; }
 
     [Required]
     [MinLength(2), MaxLength(20)]
@@ -45,11 +47,11 @@ public class Vehicle
     [MinLength(7),  MaxLength(8)]
     public string CarLicencePlate { get; set; } // registracionen nomer
 
-    public int CarSystemId { get; set; } // unikalen id nomer v sistemata
+
+    public User User { get; set; }
 
     [ForeignKey("User")]
-    public int Id { get; set; }
+    public int userId { get; set; }
 
-    public string MechanicToVehicle { get; set; }
-    public int? CarYear1 { get; }
+    public bool IsDeleted { get; internal set; }
 }

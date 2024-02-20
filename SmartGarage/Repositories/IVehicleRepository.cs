@@ -1,15 +1,20 @@
-using Humanizer.Localisation.TimeToClockNotation;
 using SmartGarage.Models;
-using SmartGarage.Models.DTOs;
+using SmartGarage.Models.QueryParameters;
+using System.Collections.Generic;
 
-namespace SmartGarage.Repositories;
-
-public interface IVehicleRepository
+namespace SmartGarage.Repositories
 {
-    List<Vehicle> GetAllVehicles();
-    Vehicle? GetVehicleById(int id); //moje da vurne null stoinost
-    Vehicle? CreateNewVehicle(Vehicle vehicle); // validation failure or unhendeld exception
-    Vehicle UpdateVehicle(int id, Vehicle vehicle);
-    bool DeleteVehicle(int id); // ili da e void ?
-    public bool MechanicToVehicle(Mechanic mechanic, Vehicle vehicle); // ili da e v imehanik repositorito
+    public interface IVehicleRepository
+    {
+        Vehicle Create(User user, Vehicle vehicle);
+        IList<Vehicle> GetAll();
+        Vehicle GetById(int id);
+        IList<string> GetLicensePlateByUser(string username);
+        Vehicle Update(int vehicleId, Vehicle updatedVehicle);
+        IList<Vehicle> FilterBy(VehicleQueryParameters filterParameters);
+        Vehicle FilterByLicensePlate(string licensePlate);
+        List<Vehicle> SearchByPhoneNumber(string phoneNumber);
+        IList<Vehicle> SearchBy(string filter);
+        bool Delete(int id);
+    }
 }

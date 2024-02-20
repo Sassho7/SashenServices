@@ -1,15 +1,24 @@
+using SmartGarage.DTOs;
+using SmartGarage.Models;
+using SmartGarage.Models.QueryParameters;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SmartGarage.Repositories
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetAllUsersAsync();
-        Task<User> GetUserByIdAsync(int userId);
-        Task<User> GetUserByUsernameAsync(string username);
-        Task<User> AddUserAsync(User user);
-        Task<User> UpdateUserAsync(User user);
-        Task<bool> DeleteUserAsync(int userId);
+        IList<User> GetAll();
+        IList<User> FilterBy(UserQueryParameters usersParams);
+        User GetById(int id);
+        User GetByUsername(string name);
+        User GetByEmail(string email);
+        User Create(User newUser);
+        User Update(int id, User updatedUser);
+        User SetPassword(string email, string newPassword);
+        User Delete(int id);
+        bool UserExists(string username);
+        bool EmailExists(string email);
+        bool PhoneNumberExists(string phoneNumber);
+        int Count();
     }
 }

@@ -1,61 +1,144 @@
-       using Microsoft.EntityFrameworkCore;
-using SmartGarage.Data;
-using SmartGarage.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+using SmartGarage.Data;
+using SmartGarage.Exceptions;
+using SmartGarage.Models;
+using SmartGarage.Repositories;
+using System;
+using SmartGarage.DTOs;
+using SmartGarage.Models.QueryParameters;
 namespace SmartGarage.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly SGDbContext _dbContext;
+        private readonly SGDbContext context;
 
-        public UserRepository(SGDbContext dbContext)
+        public UserRepository(SGDbContext context)
         {
-            _dbContext = dbContext;
+            this.context = context;
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public IList<User> GetAll()
         {
-            return await _dbContext.Users.ToListAsync();
+            return context.Users.Where(u => !u.IsDeleted).ToList();
         }
 
-        public async Task<User> GetUserByIdAsync(int userId)
+        public IList<User> FilterBy(UserQueryParameters usersParams)
         {
-            return await _dbContext.Users.FindAsync(userId);
-        }
 
-        public async Task<User> GetUserByUsernameAsync(string username)
-        {
-            return await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
-        }
+            IQueryable<User> result = context.Users
+               .Where(u => !u.IsDeleted);
 
-        public async Task<User> AddUserAsync(User user)
-        {
-            _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
-            return user;
-        }
 
-        public async Task<User> UpdateUserAsync(User user)
-        {
-            _dbContext.Entry(user).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
-            return user;
-        }
-
-        public async Task<bool> DeleteUserAsync(int userId)
-        {
-            var user = await _dbContext.Users.FindAsync(userId);
-            if (user == null)
+            if (!string.IsNullOrEmpty(usersParams.Username))
             {
-                return false;
+                result = result.Where(u => u.Username.Contains(usersParams.Username));
             }
 
-            _dbContext.Users.Remove(user);
-            await _dbContext.SaveChangesAsync();
-            return true;
+            if (!string.IsNullOrEmpty(usersParams.Email))
+            {
+                result = result.Where(u => u.Email.Contains(usersParams.Email));
+            }
+
+            if (!string.IsNullOrEmpty(usersParams.PhoneNumber))
+            {
+                result = result.Where(u => u.PhoneNumber.Contains(usersParams.PhoneNumber));
+            }
+
+            return result.ToList();
         }
+
+
+        public User GetById(int id)
+        {
+            return context.Users.FirstOrDefault(u => u.Id == id && !u.IsDeleted) ??
+                throw new EntityNotFoundException($"User with id:\"{id}\" not found.");
+        }
+
+        public User GetByUsername(string name)
+        {
+            return context.Users.FirstOrDefault(u => u.Username == name && !u.IsDeleted) ??
+               throw new EntityNotFoundException($"User with username:\"{name}\" is not found.");
+        }
+
+        public User GetByEmail(string email)
+        {
+            return context.Users.FirstOrDefault(u => u.Email == email && !u.IsDeleted) ??
+               throw new EntityNotFoundException($"User with email:\"{email}\" is not found.");
+        }
+
+        public User Create(User newUser)
+        {
+            var username = newUser.Username;
+            var email = newUser.Email;
+            var phoneNumber = newUser.PhoneNumber;
+
+            if (UserExists(username))
+                throw new DuplicateEntityExcetion($"Username \"{username}\" already exists!");
+
+            if (EmailExists(email))
+                throw new DuplicateEntityExcetion($"Email \"{email}\" already exists!");
+
+            if (PhoneNumberExists(phoneNumber))
+                throw new DuplicateEntityExcetion($"PhoneNumber \"{phoneNumber}\" already exists!");
+
+            newUser.JoinDate = DateTime.Now;
+            context.Users.Add(newUser);
+            context.SaveChanges();
+            return newUser;
+        }
+
+        public User Update(int id, User updatedUser)
+        {
+            var newUser = context.Users.FirstOrDefault(u => u.Id == id && !u.IsDeleted) ??
+                throw new EntityNotFoundException($"User with id:\"{id}\" not found.");
+
+            newUser.Username = updatedUser.Username;
+            newUser.Email = updatedUser.Email;
+            newUser.PhoneNumber = updatedUser.PhoneNumber;
+            newUser.IsEmployee = updatedUser.IsEmployee;
+
+            context.SaveChanges();
+            return newUser;
+        }
+
+        public User SetPassword(string email, string newPassword)
+        {
+            var userToUpdate = GetByEmail(email);
+
+            userToUpdate.PasswordHash = newPassword;
+            context.SaveChanges();
+            return userToUpdate;
+        }
+
+        public User Delete(int id)
+        {
+            User toDelete = GetById(id);
+            toDelete.IsDeleted = true;
+            context.SaveChanges();
+            return toDelete;
+        }
+
+        public bool UserExists(string username)
+        {
+            return context.Users.Any(u => u.Username == username && !u.IsDeleted);
+        }
+
+        public bool EmailExists(string email)
+        {
+            return context.Users.Any(u => u.Email == email && !u.IsDeleted);
+        }
+
+        public bool PhoneNumberExists(string phoneNumber)
+        {
+            return context.Users.Any(u => u.PhoneNumber == phoneNumber && !u.IsDeleted);
+        }
+
+        public int Count()
+        {
+            return context.Users.Where(u => !u.IsDeleted).Count();
+        }
+
+
     }
 }

@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace SmartGarage.Services
+namespace SmartGarage.Helpers
 {
     public interface IPasswordHelper
     {
