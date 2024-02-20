@@ -5,7 +5,7 @@ namespace SmartGarage.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        // Additional properties
+
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -13,5 +13,6 @@ namespace SmartGarage.Models
         public DateTime RegistrationDate { get; set; }
         public string VerificationToken { get; set; }
         public bool IsEmailVerified { get; set; }
+        public string Token { get; set; }
     }
 }

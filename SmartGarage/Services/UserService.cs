@@ -1,23 +1,17 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Smart_Garage.Services.Contracts;
 using SmartGarage.Exceptions;
 using SmartGarage.Helpers;
 using SmartGarage.Models.DTOs;
 using SmartGarage.Models;
 using SmartGarage.Models.DTOs.UserDTO;
 using SmartGarage.Repositories;
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using SmartGarage.Models.QueryParameters;
 using SmartGarage.DTOs;
 using SmartGarage.ViewModels;
-using Microsoft.AspNetCore.Components.Forms;
+
 
 namespace SmartGarage.Services
 {
@@ -28,13 +22,16 @@ namespace SmartGarage.Services
         private readonly IMapper autoMapper;
         private readonly IEmailSender emailSender;
         private readonly IPasswordHelper passwordHelper;
-        public UserService(IUserRepository usersRepository, IConfiguration configuration, IMapper autoMapper, IEmailSender emailSender)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public UserService(IUserRepository usersRepository, IConfiguration configuration, IMapper autoMapper, IEmailSender emailSender, IHttpContextAccessor httpContextAccessor)
         {
             this.usersRepository = usersRepository;
             this.configuration = configuration;
             this.autoMapper = autoMapper;
             this.emailSender = emailSender;
             passwordHelper = new PasswordHelper();
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public UserResponseDTO Create(UserRegistrationDTO newUser) 
@@ -55,6 +52,16 @@ namespace SmartGarage.Services
 
             return autoMapper.Map<UserResponseDTO>(usersRepository.Create(user));
         }
+        public User GetCurrentLoggedInUser()
+        {
+            var username = _httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            if (username != null)
+            {
+                return usersRepository.GetByUsername(username);
+            }
+            return null;
+        }
+
 
         public IList<UserResponseDTO> GetAll()
         {
@@ -177,7 +184,7 @@ namespace SmartGarage.Services
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;
         }
-
+       
         public User Authenticate(string username)
         {
             return usersRepository.GetByUsername(username);

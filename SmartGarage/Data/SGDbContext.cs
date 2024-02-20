@@ -66,7 +66,6 @@ namespace SmartGarage.Data
             {
                 e.Property(s => s.Name)
                 .IsRequired();
-
                 e.Property(p => p.Price)
                 .IsRequired();
             });

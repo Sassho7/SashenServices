@@ -5,7 +5,7 @@ using SmartGarage.Models.QueryParameters;
 using SmartGarage.ViewModels;
 using SmartGarage.Models;
 
-namespace Smart_Garage.Services.Contracts
+namespace SmartGarage.Services
 {
     public interface IUserService
     {

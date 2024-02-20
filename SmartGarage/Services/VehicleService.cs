@@ -7,7 +7,7 @@ using SmartGarage.Models.DTOs.VehicleDTO;
 using SmartGarage.Repositories;
 using SmartGarage.Services;
 
-namespace Smart_Garage.Services
+namespace SmartGarage.Services
 {
     public class VehicleService : IVehicleService
     {
