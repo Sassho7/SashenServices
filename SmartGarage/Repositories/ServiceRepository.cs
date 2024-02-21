@@ -25,7 +25,6 @@ namespace SmartGarage.Repositories
             {
                 throw new ArgumentNullException(nameof(newService));
             }
-
             try
             {
                 _context.Services.Add(newService);
@@ -34,7 +33,6 @@ namespace SmartGarage.Repositories
             }
             catch (DbUpdateException ex)
             {
-            
                 throw new RepositoryException("Failed to create service. See inner exception for details.", ex);
             }
         }
@@ -52,15 +50,13 @@ namespace SmartGarage.Repositories
             {
                 result = result.Where(s => s.Name == serviceParams.Name);
             }
-
-            if (serviceParams.MinPrice.HasValue)
-            {
-                result = result.Where(s => s.Price >= serviceParams.MinPrice);
-            }
-
             if (serviceParams.MaxPrice.HasValue)
             {
                 result = result.Where(s => s.Price <= serviceParams.MaxPrice);
+            }
+            if (serviceParams.MinPrice.HasValue)
+            {
+                result = result.Where(s => s.Price >= serviceParams.MinPrice);
             }
 
             switch (serviceParams.SortBy)
@@ -76,7 +72,6 @@ namespace SmartGarage.Repositories
             }
 
             result = (serviceParams.SortOrder == "desc") ? result.Reverse() : result;
-
             return result.ToList();
         }
 
@@ -107,7 +102,7 @@ namespace SmartGarage.Repositories
             catch (DbUpdateException ex)
             {
 
-                throw new RepositoryException("Failed to update service. See inner exception for details.", ex);
+                throw new RepositoryException("Service Update Failure", ex);
             }
         }
 
@@ -124,18 +119,18 @@ namespace SmartGarage.Repositories
             catch (DbUpdateException ex)
             {
 
-                throw new RepositoryException("Failed to delete service. See inner exception for details.", ex);
+                throw new RepositoryException("Service Deletion Failure.", ex);
             }
         }
-
+        public int Count()
+        {
+            return _context.Services.Count();
+        }
         public bool ServiceExists(string name)
         {
             return _context.Services.Any(s => s.Name == name);
         }
 
-        public int Count()
-        {
-            return _context.Services.Count();
-        }
+       
     }
 }

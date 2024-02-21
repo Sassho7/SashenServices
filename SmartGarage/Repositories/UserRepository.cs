@@ -105,8 +105,8 @@ namespace SmartGarage.Repositories
         public User SetPassword(string email, string newPassword)
         {
             var userToUpdate = GetByEmail(email);
-
             userToUpdate.PasswordHash = newPassword;
+
             context.SaveChanges();
             return userToUpdate;
         }

@@ -1,0 +1,25 @@
+﻿@model SmartGarage.ViewModels.LoginViewModel;
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<form asp-controller="Account" asp-action="Login" method="post">
+    <div style="max-width: 400px; margin: auto">
+        <h3 style="max-width: 400px; margin: 0 auto 20px auto; text-align: center">Enter Your Credentials</h3>
+        <div class="form-floating mb-3">
+            <input asp-for="Username" type="text" class="form-control" id="floatingInput" required placeholder="Username">
+            <label asp-for="Username">Username</label>
+            <span asp-validation-for="Username" class="text-danger"></span>
+
+        </div>
+        <div class="form-floating">
+            <input asp-for="Password" type="password" class="form-control" id="floatingPassword" required placeholder="Password">
+            <label asp-for="Password">Password</label>
+            <span asp-validation-for="Password" class="text-danger"></span>
+
+
+            <input style="margin: 25px auto 0 auto; display: block; width: 50%" class="btn btn-primary" type="submit" value="Login" />
+        </div>
+    </div>
+</form>

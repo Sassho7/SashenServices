@@ -2,7 +2,6 @@
 using SmartGarage.Helpers;
 using SmartGarage.Models;
 using SmartGarage.Models.DTOs;
-using SmartGarage.Models.DTOs.UserDTO;
 using SmartGarage.Models.DTOs.VehicleDTO;
 
 namespace SmartGarage.Helpers

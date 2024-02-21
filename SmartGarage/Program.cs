@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using SmartGarage.Helpers;
 using SmartGarage.Repositories;
 using SmartGarage.Services;
 using AutoMapper;
@@ -7,13 +11,16 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
-using SmartGarage.Repositories;
 using SmartGarage.Data;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Swashbuckle = Swashbuckle.AspNetCore.Swagger;
-using Rotativa.AspNetCore;
+using SmartGarage.Helpers;
+using SmartGarage.ViewModels;
+using System.Threading;
+using System;
+using Microsoft.AspNetCore.Http;
+using SmartGarage.Models;
+
 namespace ForumManagmentSystem
 {
     public class Program
@@ -26,14 +33,13 @@ namespace ForumManagmentSystem
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
-             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+            builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IVehicleService, VehicleService>();
-             builder.Services.AddScoped<IServiceService, ServiceService>();
+            builder.Services.AddScoped<IServiceService, ServiceService>();
 
             builder.Services.AddScoped<Authenticator>();
-            builder.Services.AddScoped<IEmailSender, EmailSender>();
 
             builder.Services.AddHttpContextAccessor();
 
@@ -53,7 +59,6 @@ namespace ForumManagmentSystem
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
                 });
-              //  options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
             builder.Services.Configure<RequestLocalizationOptions>(options =>
@@ -63,7 +68,6 @@ namespace ForumManagmentSystem
                 options.SupportedUICultures = new List<CultureInfo> { new CultureInfo("en-US") };
             });
 
-     
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -110,7 +114,6 @@ namespace ForumManagmentSystem
             app.UseStaticFiles();
             app.UseRouting();
 
-
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -122,12 +125,11 @@ namespace ForumManagmentSystem
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Account}/{action=Login}/{id?}"); 
             });
-
             app.Run();
         }
     }
 }
-
-

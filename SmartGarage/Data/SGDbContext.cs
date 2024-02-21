@@ -69,7 +69,79 @@ namespace SmartGarage.Data
                 e.Property(p => p.Price)
                 .IsRequired();
             });
+            modelBuilder.Entity<User>().HasData(
+              new User
+              {
+                  Id = 1,
+                  Username = "exampleuser1",
+                  PasswordHash = "Test123!",
+                  Email = "user1@example.com",
+                  PhoneNumber = "1234567890",
+                  JoinDate = DateTime.Now,
+                  IsEmployee = false,
+                  IsDeleted = false
+              },
+              new User
+              {
+                  Id = 2,
+                  Username = "exampleuser2",
+                  PasswordHash = "Test123!",
+                  Email = "user2@example.com",
+                  PhoneNumber = "9876543210",
+                  JoinDate = DateTime.Now,
+                  IsEmployee = false,
+                  IsDeleted = false
+              }
+          // Add more users if needed
+          );
 
+            // Seed vehicles
+            modelBuilder.Entity<Vehicle>().HasData(
+                new Vehicle
+                {
+                    Id = 1,
+                    CarMake = "Toyota",
+                    CarModel = "Camry",
+                    CarYear = 2018,
+                    CarVin = "ABC123456DEF78901",
+                    CarLicencePlate = "ABC123",
+                    userId = 1,
+                    IsDeleted = false
+                },
+                new Vehicle
+                {
+                    Id = 2,
+                    CarMake = "Honda",
+                    CarModel = "Accord",
+                    CarYear = 2019,
+                    CarVin = "DEF987654ABC12345",
+                    CarLicencePlate = "XYZ789",
+                    userId = 2,
+                    IsDeleted = false
+                }
+                // Add more vehicles if needed
+            );
+
+            // Seed services
+            modelBuilder.Entity<Service>().HasData(
+                new Service
+                {
+                    ServiceId = 1,
+                    Name = "Oil Change",
+                    Price = 50.00,
+                    UserId = 1,
+                    isDeleted = false
+                },
+                new Service
+                {
+                    ServiceId = 2,
+                    Name = "Tire Rotation",
+                    Price = 30.00,
+                    UserId = 2,
+                    isDeleted = false
+                }
+                // Add more services if needed
+            );
         }
     }
 }

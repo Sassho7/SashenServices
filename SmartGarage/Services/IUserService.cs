@@ -22,9 +22,9 @@ namespace SmartGarage.Services
         bool UserExists(string username);
         bool EmailExists(string email);
         void IsCurrentUserEmployee(string username);
-        void SendEmailLogic(SendEmailViewModel userEmail);
         bool VerifyPasswordHash(string password, User user);
         string CreateToken(User user);
         User Authenticate(string username);
+        public User GetLoggedInUser();
     }
 }

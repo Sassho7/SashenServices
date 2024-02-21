@@ -40,9 +40,6 @@ namespace SmartGarage.Repositories
         {
             return context.Vehicles
                 .Where(v => !v.IsDeleted)
-                .Include(v => v.User)
-                .Include(v => v.CarMake)
-                 .Include(v => v.CarModel)
                 .ToList();
         }
 

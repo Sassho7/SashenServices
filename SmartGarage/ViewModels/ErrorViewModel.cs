@@ -1,4 +1,4 @@
-namespace SmartGarage.Models
+﻿namespace SmartGarage.Models
 {
     public class ErrorViewModel
     {

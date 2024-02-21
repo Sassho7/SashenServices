@@ -11,6 +11,7 @@ using System.Security.Claims;
 using SmartGarage.Models.QueryParameters;
 using SmartGarage.DTOs;
 using SmartGarage.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 
 namespace SmartGarage.Services
@@ -20,48 +21,45 @@ namespace SmartGarage.Services
         private readonly IUserRepository usersRepository;
         private readonly IConfiguration configuration;
         private readonly IMapper autoMapper;
-        private readonly IEmailSender emailSender;
         private readonly IPasswordHelper passwordHelper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(IUserRepository usersRepository, IConfiguration configuration, IMapper autoMapper, IEmailSender emailSender, IHttpContextAccessor httpContextAccessor)
+        public UserService(IUserRepository usersRepository, IConfiguration configuration, IMapper autoMapper, IHttpContextAccessor httpContextAccessor)
         {
             this.usersRepository = usersRepository;
             this.configuration = configuration;
             this.autoMapper = autoMapper;
-            this.emailSender = emailSender;
             passwordHelper = new PasswordHelper();
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public UserResponseDTO Create(UserRegistrationDTO newUser) 
+        public UserResponseDTO Create(UserRegistrationDTO newUser)
         {
             if (usersRepository.UserExists(newUser.Username))
                 throw new DuplicateEntityExcetion($"User with name {newUser.Username} already exists.");
 
-            string randomPassword = passwordHelper.GenerateRandomPassword();
+            if (newUser.Password != newUser.ConfirmPassword)
+                throw new ArgumentException("The password and confirm password do not match.");
 
             User user = new User()
             {
                 Username = newUser.Username,
-                PasswordHash = randomPassword,
+                PasswordHash = passwordHelper.HashPassword(newUser.Password), 
                 Email = newUser.Email,
                 PhoneNumber = newUser.PhoneNumber
-
             };
 
             return autoMapper.Map<UserResponseDTO>(usersRepository.Create(user));
         }
-        public User GetCurrentLoggedInUser()
+        public User GetLoggedInUser()
         {
-            var username = _httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-            if (username != null)
-            {
-                return usersRepository.GetByUsername(username);
-            }
-            return null;
-        }
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var username = _httpContextAccessor.HttpContext?.User.Identity.Name;
 
+            var user = usersRepository.GetById(int.Parse(userId));
+            return user;
+           
+        }
 
         public IList<UserResponseDTO> GetAll()
         {
@@ -76,6 +74,7 @@ namespace SmartGarage.Services
                             .Select(u => autoMapper.Map<UserResponseDTO>(u))
                             .ToList();
         }
+
         public UserResponseDTO GetById(int id) 
         { 
             User user = usersRepository.GetById(id);
@@ -148,16 +147,6 @@ namespace SmartGarage.Services
                 throw new AuthorizationException("For employees only");
         }
 
-        public async void SendEmailLogic(SendEmailViewModel userEmail)
-        {
-            string newPassword = passwordHelper.GenerateRandomPassword();
-            SetPassword(userEmail.Email, newPassword);
-            string username = usersRepository.GetByEmail(userEmail.Email).Username;
-            var subject = "New password";
-            var message = $"Hello, {username}, <br> Your new password is {newPassword}, you can change it once you log in on the platform using it, have a nice day!";
-            await emailSender.SendEmailAsync(userEmail.Email, subject, message);
-        }
-
         public bool VerifyPasswordHash(string password, User user)
         {
             if (password == user.PasswordHash)
@@ -180,7 +169,7 @@ namespace SmartGarage.Services
                 claims: claims,
                 expires: DateTime.Now.AddHours(24),
                 signingCredentials: creds);
-
+            //ToDo
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;
         }

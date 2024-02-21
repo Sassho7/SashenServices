@@ -7,6 +7,8 @@ using SmartGarage.Models.QueryParameters;
 using SmartGarage.Services;
 using System.Security.Claims;
 using SmartGarage.DTOs;
+using SmartGarage.ViewModels;
+using System.Threading.Tasks;
 
 namespace SmartGarage.Controllers.API
 {
@@ -31,13 +33,15 @@ namespace SmartGarage.Controllers.API
             try
             {
                 var newUser = userService.Create(userRequestDTO);
-                return Ok(newUser);
+                // Assuming the login page route is named "Login" in your routing configuration
+                return RedirectToAction("Login", "Account");
             }
             catch (DuplicateEntityExcetion e)
             {
                 return BadRequest(e.Message);
             }
         }
+
         [HttpGet("")]
         public IActionResult GetAll([FromQuery] UserQueryParameters filterParameters)
         {
@@ -47,16 +51,17 @@ namespace SmartGarage.Controllers.API
                 var users = userService.FilterBy(filterParameters);
                 return Ok(users);
             }
-            catch(UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException ex)
             {
                 return Unauthorized(ex.Message);
             }
-            catch(EntityNotFoundException ex)
+            catch (EntityNotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
         }
-        [HttpGet("{id}")] 
+
+        [HttpGet("{id}")]
         public IActionResult GetById(string id)
         {
             try
@@ -70,8 +75,7 @@ namespace SmartGarage.Controllers.API
             }
         }
 
-
-        [HttpPost("login")] 
+        [HttpPost("login")]
         [AllowAnonymous]
         public async Task<ActionResult<string>> Login([FromBody] UserLoginDTO requestDTO)
         {
@@ -90,15 +94,13 @@ namespace SmartGarage.Controllers.API
             }
         }
 
-        [HttpPut("{id}")] 
+        [HttpPut("{id}")]
         public IActionResult Update(string id, [FromBody] UpdateUserRequestDTO updatedUser)
         {
             try
             {
                 var username = User.FindFirst(ClaimTypes.Name)?.Value;
                 var result = userService.Update(int.Parse(id), updatedUser, username);
-                    
-
                 return Ok(result);
             }
             catch (EntityNotFoundException ex)
@@ -111,14 +113,14 @@ namespace SmartGarage.Controllers.API
             }
         }
 
-        [HttpDelete("{id}")] 
+        [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
             try
             {
                 var username = User.FindFirst(ClaimTypes.Name)?.Value;
                 userService.Delete(int.Parse(id), username);
-                return Ok($"User with id:[{id}] deleted successfully.");
+                return Ok("User has been successfully deleted");
             }
             catch (EntityNotFoundException ex)
             {
